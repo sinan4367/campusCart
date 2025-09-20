@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import JavaConceptsDemo from "../components/JavaConceptsDemo";
 
 const Home = () => {
   const { user } = useAuth();
@@ -46,14 +45,23 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-white transition-colors duration-300 overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-purple-600 to-indigo-800 text-white py-20 md:py-28 lg:py-36 rounded-3xl shadow-xl overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section
+        className="relative text-white py-20 md:py-28 lg:py-36 rounded-3xl shadow-xl overflow-hidden mb-10 mx-4"
+        style={{
+          backgroundImage: `url("/Screenshot 2025-09-15 194720.png")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-black/50 to-black/70"></div>{" "}
+        {/* Overlay */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-md leading-tight">
             Discover, Share, Thrive
             <br />
             Your Campus Marketplace Awaits
           </h1>
-          <p className="text-lg md:text-xl mb-10 text-indigo-100 max-w-4xl mx-auto drop-shadow-sm">
+          <p className="text-lg md:text-xl mb-10 text-white max-w-4xl mx-auto drop-shadow-sm">
             CampusCart is your go-to platform for effortlessly buying, selling,
             and freely sharing academic resources and hostel essentials within
             your university community.
@@ -63,13 +71,13 @@ const Home = () => {
               <>
                 <Link
                   to="/register"
-                  className="text-lg font-semibold px-8 py-4 bg-white text-purple-700 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                  className="text-lg font-semibold px-8 py-4 bg-white text-indigo-800 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 ease-in-out"
                 >
                   Get Started
                 </Link>
                 <Link
                   to="/browse"
-                  className="text-lg font-semibold px-8 py-4 border-2 border-white text-white rounded-full shadow-lg hover:bg-white hover:text-purple-700 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                  className="text-lg font-semibold px-8 py-4 border-2 border-white text-white rounded-full shadow-lg hover:bg-white hover:text-indigo-800 transform hover:scale-105 transition-all duration-300 ease-in-out"
                 >
                   Browse Items
                 </Link>
@@ -78,14 +86,14 @@ const Home = () => {
               <>
                 <Link
                   to="/browse"
-                  className="text-lg font-semibold px-8 py-4 bg-white text-purple-700 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                  className="text-lg font-semibold px-8 py-4 bg-white text-indigo-800 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 ease-in-out"
                 >
                   Browse Items
                 </Link>
                 {user.role === "buyer" && (
                   <Link
                     to="/sell"
-                    className="text-lg font-semibold px-8 py-4 border-2 border-white text-white rounded-full shadow-lg hover:bg-white hover:text-purple-700 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                    className="text-lg font-semibold px-8 py-4 border-2 border-white text-white rounded-full shadow-lg hover:bg-white hover:text-indigo-800 transform hover:scale-105 transition-all duration-300 ease-in-out"
                   >
                     Start Selling
                   </Link>
@@ -198,20 +206,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Java Concepts Demo Section */}
-      {/* <section className="py-20 bg-gray-50 rounded-3xl my-10 mx-4 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <JavaConceptsDemo />
-        </div>
-      </section> */}
-
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-purple-600 to-indigo-800 text-white rounded-3xl shadow-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold mb-4 drop-shadow-md">
             Ready to Get Started?
           </h2>
-          <p className="text-lg mb-8 text-indigo-100 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg mb-8 text-white max-w-2xl mx-auto leading-relaxed">
             Join the CampusCart community today and discover a better way to
             manage your campus resources.
           </p>
@@ -220,13 +221,13 @@ const Home = () => {
               <>
                 <Link
                   to="/register"
-                  className="text-lg font-semibold px-8 py-4 bg-white text-purple-700 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                  className="text-lg font-semibold px-8 py-4 bg-white text-indigo-800 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 ease-in-out"
                 >
                   Create Account
                 </Link>
                 <Link
                   to="/browse"
-                  className="text-lg font-semibold px-8 py-4 border-2 border-white text-white rounded-full shadow-lg hover:bg-white hover:text-purple-700 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                  className="text-lg font-semibold px-8 py-4 border-2 border-white text-white rounded-full shadow-lg hover:bg-white hover:text-indigo-800 transform hover:scale-105 transition-all duration-300 ease-in-out"
                 >
                   Explore Items
                 </Link>
@@ -234,7 +235,7 @@ const Home = () => {
             ) : (
               <Link
                 to="/browse"
-                className="text-lg font-semibold px-8 py-4 bg-white text-purple-700 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                className="text-lg font-semibold px-8 py-4 bg-white text-indigo-800 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 ease-in-out"
               >
                 Start Browsing
               </Link>

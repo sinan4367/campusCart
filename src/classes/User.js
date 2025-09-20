@@ -59,6 +59,11 @@ export class User {
     return new User(name, email, "seller", phone, whatsapp, id);
   }
 
+  // Method to get user display info
+  displayInfo() {
+    return `User ID: ${this.id}, Name: ${this.name}, Email: ${this.email}, Role: ${this.role}`;
+  }
+
   // Method overloading - updateContact can be called with different parameters
   updateContact(phone, whatsapp) {
     if (phone && whatsapp) {
