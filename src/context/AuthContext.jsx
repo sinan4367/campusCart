@@ -1,4 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { User } from "../classes/User";
+import { Buyer } from "../classes/Buyer";
+import { Seller } from "../classes/Seller";
+import { AdminUser } from "../classes/AdminUser";
 
 const AuthContext = createContext();
 
@@ -19,47 +23,111 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check localStorage for existing user session
+    
     const savedUser = localStorage.getItem("campusCartUser");
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      const userData = JSON.parse(savedUser);
+      let rehydratedUser = null;
+
+      if (userData.role === "buyer") {
+        rehydratedUser = new Buyer(
+          userData.name,
+          userData.email,
+          userData.phone,
+          userData.whatsapp,
+          userData.id,
+          userData.discussionPosts
+        );
+      } else if (userData.role === "seller") {
+        rehydratedUser = new Seller(
+          userData.name,
+          userData.email,
+          userData.phone,
+          userData.whatsapp,
+          userData.id,
+          userData.items,
+          userData.discussionPosts
+        );
+      } else if (userData.role === "admin") {
+        rehydratedUser = new AdminUser(
+          userData.name,
+          userData.email,
+          userData.phone,
+          userData.id,
+          userData.discussionPosts
+        );
+      }
+      setUser(rehydratedUser);
     }
     setIsLoading(false);
   }, []);
 
   const login = (userData) => {
-    // Check if the user is blocked
+    
     if (blockedUsers.includes(userData.id)) {
       alert("This account has been blocked by an administrator.");
       return;
     }
 
-    setUser(userData);
-    localStorage.setItem("campusCartUser", JSON.stringify(userData));
+    let rehydratedUser = userData; 
+    if (!(userData instanceof User)) {
+      
+      if (userData.role === "buyer") {
+        rehydratedUser = new Buyer(
+          userData.name,
+          userData.email,
+          userData.phone,
+          userData.whatsapp,
+          userData.id,
+          userData.discussionPosts
+        );
+      } else if (userData.role === "seller") {
+        rehydratedUser = new Seller(
+          userData.name,
+          userData.email,
+          userData.phone,
+          userData.whatsapp,
+          userData.id,
+          userData.items,
+          userData.discussionPosts
+        );
+      } else if (userData.role === "admin") {
+        rehydratedUser = new AdminUser(
+          userData.name,
+          userData.email,
+          userData.phone,
+          userData.id,
+          userData.discussionPosts
+        );
+      }
+    }
 
-    // Save all users to local storage
+    setUser(rehydratedUser);
+    localStorage.setItem("campusCartUser", JSON.stringify(rehydratedUser));
+
+    
     const existingUsers =
       JSON.parse(localStorage.getItem("campusCartUsers")) || [];
-    const userExists = existingUsers.some((u) => u.id === userData.id);
+    const userExists = existingUsers.some((u) => u.id === rehydratedUser.id);
 
     if (!userExists) {
-      existingUsers.push(userData);
+      existingUsers.push(rehydratedUser);
       localStorage.setItem("campusCartUsers", JSON.stringify(existingUsers));
     }
 
-    // Record login activity
+    
     const recentActivity =
       JSON.parse(localStorage.getItem("campusCartRecentActivity")) || [];
     const newActivity = {
-      action: `${userData.name} logged in as ${userData.role}`,
-      user: userData.name,
+      action: `${rehydratedUser.name} logged in as ${rehydratedUser.role}`,
+      user: rehydratedUser.name,
       time: new Date().toLocaleString(),
     };
-    recentActivity.unshift(newActivity); // Add to the beginning
+    recentActivity.unshift(newActivity); 
     localStorage.setItem(
       "campusCartRecentActivity",
       JSON.stringify(recentActivity.slice(0, 10))
-    ); // Keep last 10 activities
+    ); 
   };
 
   const logout = () => {

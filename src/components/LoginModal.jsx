@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { User } from "../classes/User";
+import { AdminUser } from "../classes/AdminUser"; // Import AdminUser
+import { Buyer } from "../classes/Buyer"; // Import Buyer
+import { Seller } from "../classes/Seller"; // Import Seller
 
 const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
   const { login } = useAuth();
@@ -29,20 +32,22 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
 
     try {
       // Admin login (unchanged)
+      const existingAdmin = storedUsers.find(
+        (u) => u.email === formData.email && u.role === "admin"
+      );
+
       if (
         formData.email === "admin@campuscart.com" &&
         formData.password === "admin123"
       ) {
-        // For admin, always use the specific admin user ID
-        const adminUser = User.createAdmin(
+        const adminUser = new AdminUser(
           "Admin User",
           formData.email,
-          "9876543210"
+          "9876543210",
+          existingAdmin ? existingAdmin.id : null,
+          existingAdmin ? existingAdmin.discussionPosts : []
         );
         // Check if admin user already exists to retrieve their ID
-        const existingAdmin = storedUsers.find(
-          (u) => u.email === formData.email && u.role === "admin"
-        );
         if (existingAdmin) {
           adminUser.id = existingAdmin.id; // Use existing ID
         }
@@ -56,6 +61,21 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
         throw new Error("Please select a login role (Buyer or Seller).");
       }
 
+      // Add validation for email and password for Buyer/Seller logins
+      if (!formData.email || !formData.password) {
+        throw new Error("Please enter both email and password.");
+      }
+
+      // Validate email format and domain
+      if (
+        !User.validateEmail(formData.email) ||
+        !formData.email.endsWith("@gmail.com")
+      ) {
+        throw new Error(
+          "Please enter a valid Gmail address (e.g., user@gmail.com)."
+        );
+      }
+
       const currentRole = role || selectedRole;
 
       if (currentRole === "buyer") {
@@ -66,20 +86,19 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
 
         if (existingBuyer) {
           // If buyer exists, use their stored data
-          buyerUser = new User(
+          buyerUser = new Buyer(
             existingBuyer.name,
             existingBuyer.email,
-            existingBuyer.role,
             existingBuyer.phone,
             existingBuyer.whatsapp,
-            existingBuyer.id // Pass existing ID
+            existingBuyer.id, // Pass existing ID
+            existingBuyer.discussionPosts || [] // Pass existing discussionPosts
           );
         } else {
           // If new buyer, create a new user
-          buyerUser = new User(
+          buyerUser = new Buyer(
             formData.email.split("@")[0], // Use part of email as name
             formData.email,
-            "buyer",
             "9876543212" // Generic phone
           );
         }
@@ -93,16 +112,18 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
 
         if (existingSeller) {
           // If seller exists, use their stored data
-          sellerUser = User.createSeller(
+          sellerUser = new Seller(
             existingSeller.name,
             existingSeller.email,
             existingSeller.phone,
             existingSeller.whatsapp,
-            existingSeller.id // Pass existing ID
+            existingSeller.id, // Pass existing ID
+            existingSeller.items || [], // Pass existing items
+            existingSeller.discussionPosts || [] // Pass existing discussionPosts
           );
         } else {
           // If new seller, create a new user
-          sellerUser = User.createSeller(
+          sellerUser = new Seller(
             formData.email.split("@")[0], // Use part of email as name
             formData.email,
             "9876543211",
@@ -251,30 +272,6 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
               Register here
             </button>
           </p>
-        </div>
-
-        {/* Demo Accounts */}
-        <div className="mt-8 p-5 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-inner text-sm">
-          <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3 leading-snug">
-            Quick Access Demo Accounts:
-          </h3>
-          <div className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
-            <p>
-              <strong>Admin:</strong>{" "}
-              <span className="font-mono">admin@campuscart.com</span> /{" "}
-              <span className="font-mono">admin123</span>
-            </p>
-            <p>
-              <strong>Seller:</strong>{" "}
-              <span className="font-mono">seller@campuscart.com</span> /{" "}
-              <span className="font-mono">seller123</span>
-            </p>
-            <p>
-              <strong>Buyer:</strong>{" "}
-              <span className="font-mono">buyer@campuscart.com</span> /{" "}
-              <span className="font-mono">buyer123</span>
-            </p>
-          </div>
         </div>
       </div>
     </div>

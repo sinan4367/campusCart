@@ -1,8 +1,3 @@
-/**
- * Cart class implementing Java concepts in JavaScript
- * - Static methods (getTotal, getItemCount, calculateTax)
- * - Private methods (#saveToStorage, #loadFromStorage, #validateItem)
- */
 export class Cart {
   constructor() {
     this.items = [];
@@ -11,26 +6,21 @@ export class Cart {
     this.discount = 0;
     this.finalTotal = 0;
 
-    // Load cart from storage
     this.#loadFromStorage();
   }
 
-  // Static method to calculate tax
   static calculateTax(subtotal, taxRate = 0.18) {
     return subtotal * taxRate;
   }
 
-  // Static method to calculate discount
   static calculateDiscount(subtotal, discountPercent = 0) {
     return (subtotal * discountPercent) / 100;
   }
 
-  // Static method to format currency
   static formatCurrency(amount) {
     return `₹${amount.toFixed(2)}`;
   }
 
-  // Static method to get cart summary
   static getCartSummary(cartItems) {
     const total = cartItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
@@ -47,7 +37,6 @@ export class Cart {
     };
   }
 
-  // Public method to add item
   addItem(item, quantity = 1) {
     if (this.#validateItem(item)) {
       const existingItem = this.items.find(
@@ -65,14 +54,12 @@ export class Cart {
     }
   }
 
-  // Public method to remove item
   removeItem(itemId) {
     this.items = this.items.filter((item) => item.id !== itemId);
     this.#updateTotals();
     this.#saveToStorage();
   }
 
-  // Public method to update quantity
   updateQuantity(itemId, quantity) {
     if (quantity <= 0) {
       this.removeItem(itemId);
@@ -87,46 +74,38 @@ export class Cart {
     }
   }
 
-  // Public method to clear cart
   clearCart() {
     this.items = [];
     this.#updateTotals();
     this.#saveToStorage();
   }
 
-  // Public method to get cart items
   getItems() {
     return [...this.items];
   }
 
-  // Public method to get cart total
   getTotal() {
     return this.finalTotal;
   }
 
-  // Public method to get item count
   getItemCount() {
     return this.items.reduce((sum, item) => sum + item.quantity, 0);
   }
 
-  // Public method to check if cart is empty
   isEmpty() {
     return this.items.length === 0;
   }
 
-  // Public method to apply discount
   applyDiscount(discountPercent) {
     this.discount = Cart.calculateDiscount(this.total, discountPercent);
     this.#updateTotals();
   }
 
-  // Public method to remove discount
   removeDiscount() {
     this.discount = 0;
     this.#updateTotals();
   }
 
-  // Public method to get cart summary
   getSummary() {
     return {
       items: this.items,

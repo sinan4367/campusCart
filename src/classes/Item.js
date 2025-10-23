@@ -1,10 +1,3 @@
-/**
- * Item class implementing Java concepts in JavaScript
- * - Constructor overloading (multiple constructors)
- * - Method overloading (updateQuantity with different signatures)
- * - Static methods (formatPrice, generateId)
- * - Private methods (#validateFile, #validatePrice)
- */
 export class Item {
   static #nextId = 1;
 
@@ -33,65 +26,52 @@ export class Item {
     this.whatsappQrCode = whatsappQrCode;
     this.images = [];
 
-    // Validate inputs
     this.#validatePrice(price);
     if (file) this.#validateFile(file);
   }
 
-  // Static method - can be called without instantiating the class
   static generateId() {
     return `item_${Item.#nextId++}`;
   }
 
-  // Static method for price formatting
   static formatPrice(price) {
     return `₹${price.toFixed(2)}`;
   }
 
-  // Static method to get category options
   static getCategories() {
     return ["Education", "Hostel", "Electronics", "Free"];
   }
 
-  // Method overloading - updateQuantity can be called with or without parameters
   updateQuantity(qty) {
     if (qty === undefined) {
-      // No parameter - increment by 1
       this.quantity += 1;
     } else if (typeof qty === "number") {
-      // Number parameter - set to specific quantity
       this.quantity = qty;
     } else if (typeof qty === "string") {
-      // String parameter - parse and set quantity
       this.quantity = parseInt(qty) || 0;
     }
 
     this.isOutOfStock = this.quantity <= 0;
   }
 
-  // Public method to add images
   addImage(imageUrl) {
     if (this.#validateImageUrl(imageUrl)) {
       this.images.push(imageUrl);
     }
   }
 
-  // Public method to remove images
   removeImage(imageUrl) {
     this.images = this.images.filter((img) => img !== imageUrl);
   }
 
-  // Public method to get formatted price
   getFormattedPrice() {
     return Item.formatPrice(this.price);
   }
 
-  // Public method to check if item is available
   isAvailable() {
     return !this.isOutOfStock && this.quantity > 0;
   }
 
-  // Public method to get item summary
   getSummary() {
     return {
       id: this.id,
@@ -105,14 +85,12 @@ export class Item {
     };
   }
 
-  // Private method for price validation
   #validatePrice(price) {
     if (typeof price !== "number" || price < 0) {
       throw new Error("Price must be a non-negative number");
     }
   }
 
-  // Private method for file validation
   #validateFile(file) {
     if (!file || typeof file !== "object") {
       throw new Error("File must be a valid file object");
@@ -136,7 +114,6 @@ export class Item {
     }
   }
 
-  // Private method for image URL validation
   #validateImageUrl(url) {
     try {
       new URL(url);
@@ -146,7 +123,6 @@ export class Item {
     }
   }
 
-  // Method to clone item (useful for cart operations)
   clone() {
     return new Item(
       this.name,
